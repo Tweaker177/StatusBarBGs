@@ -110,7 +110,8 @@ extern NSString *const HBPreferencesDidChangeNotification;
 
 %ctor {
 
-/*  This code was contributed by a reddit user to limit the scope of Cephei to where it belongs in system wide tweaks. I forget the author's name, but will try to find the post to give appropriate credit soon.  */
+/*  This code was contributed by a reddit user to limit the scope of Cephei to where it belongs in system wide tweaks. 
+I forget the author's name, but will try to find the post to give appropriate credit soon.  */
 
         BOOL shouldLoad = NO;
         NSArray *args = [[NSClassFromString(@"NSProcessInfo") processInfo] arguments];
