@@ -1,0 +1,9 @@
+Package: com.i0stweak3r.statusbarbackgrounds
+Name: StatusBarBGs
+Author: i0s_tweak3r
+Description: A simple tweak to add a custom background color of any opacity, and to pick one color for text and all the other items in status bars system wide for all devices, iOS 11-13.
+Depends: mobilesubstrate, preferenceloader, com.creaturesurvive.libcscolorpicker, ws.hbang.common, firmware (>= 11.0)
+Maintainer: i0s_tweak3r
+Architecture: iphoneos-arm
+Section: Tweaks
+Version: 1.0.0
