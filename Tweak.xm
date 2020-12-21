@@ -5,9 +5,9 @@
 
 HBPreferences *preferences;
 
-static bool kEnabled = NO;
-static bool kColorForeground = NO;
-static bool kWantsBackgroundColor = NO;
+static BOOL kEnabled = NO;
+static BOOL kColorForeground = NO;
+static BOOL kWantsBackgroundColor = NO;
 static NSString *kForegroundColorHex = nil;
 static NSString *kBackgroundColorHex = nil;
 
@@ -28,7 +28,6 @@ static NSString *kBackgroundColorHex = nil;
     if(kForegroundColorHex  != nil) {
         self = %orig;
         self.textColor = [UIColor cscp_colorFromHexString: kForegroundColorHex];
-        [self setTextColor: [UIColor cscp_colorFromHexString: kForegroundColorHex]];
         return self;
     }
     return %orig;
@@ -41,18 +40,18 @@ static NSString *kBackgroundColorHex = nil;
     if(!kEnabled) { return %orig; }
       self = %orig;
     if((kWantsBackgroundColor && kBackgroundColorHex != nil) && (kColorForeground && kForegroundColorHex != nil)) {
-        self.alpha = 1;
+        self.alpha = 1.f;
         self.backgroundColor =  [UIColor cscp_colorFromHexString: kBackgroundColorHex];
         self.userInteractionEnabled = YES;
-        self.opaque = 1;
+        self.opaque = YES;
         self.tintColor = [UIColor cscp_colorFromHexString: kForegroundColorHex];        
         return self;
     }
 else if(kWantsBackgroundColor && (kBackgroundColorHex != nil)) {
-    self.alpha = 1;
+    self.alpha = 1.f;
     self.backgroundColor =  [UIColor cscp_colorFromHexString: kBackgroundColorHex];
     self.userInteractionEnabled = YES;
-    self.opaque = 1;
+    self.opaque = YES;
     return self;
 }
   else if(kColorForeground && (kForegroundColorHex  != nil)) {
@@ -62,12 +61,16 @@ else if(kWantsBackgroundColor && (kBackgroundColorHex != nil)) {
   else { return %orig; }
 }
     
+
+//Updating changes to the UIStatusBarItem's color, to ensure any settings changes apply immediately. 
+//Should probably use a better method, but this allowed for simplicity, compatibility with almost any other status bar tweak, and it eliminates the need to respring for changes to this setting.
+
 -(void)layoutSubviews {
     if(!kEnabled || !kColorForeground) { return %orig; }
       if((kForegroundColorHex  != nil) && ([self isKindOfClass:%c(_UIStatusBarStringView)] || [self isKindOfClass:%c(UIImageView)])) {
            %orig;
             self.tintColor = [UIColor cscp_colorFromHexString: kForegroundColorHex];
-            self.alpha = 1;
+            self.alpha = 1.f;
             self.opaque = YES;
             return;
         }
@@ -85,7 +88,7 @@ else if(kWantsBackgroundColor && (kBackgroundColorHex != nil)) {
     return %orig;
 }
 
--(id)foregroundColor {
+-(UIColor*)foregroundColor {
     if(kEnabled && kColorForeground && kForegroundColorHex != nil) {
         return [UIColor cscp_colorFromHexString: kForegroundColorHex];
     }
@@ -110,8 +113,10 @@ extern NSString *const HBPreferencesDidChangeNotification;
 
 %ctor {
 
-/*  This code was contributed by a reddit user to limit the scope of Cephei to where it belongs in system wide tweaks. 
-I forget the author's name, but will try to find the post to give appropriate credit soon.  */
+/*  This code was contributed by a reddit user to limit the scope of Cephei to where it belongs in system wide tweaks (UIKit as filter). 
+I forget the author's name, but will try to find the post to give credit where due.
+The simple check to make sure it only loads in apps and SB significantly reduces CPU useage and battery drain.
+   */
 
         BOOL shouldLoad = NO;
         NSArray *args = [[NSClassFromString(@"NSProcessInfo") processInfo] arguments];
@@ -133,7 +138,7 @@ I forget the author's name, but will try to find the post to give appropriate cr
                 }
             }
         }
-//End of filter code by Reddit user, besides if(shouldLoad) { 
+//End of code by Reddit user, besides if(shouldLoad) { 
 
        
         if(shouldLoad) {
@@ -142,7 +147,7 @@ I forget the author's name, but will try to find the post to give appropriate cr
            
     preferences = [[HBPreferences alloc] initWithIdentifier:@"com.i0stweak3r.statusbarbackgrounds"];
 
-[preferences registerBool:&kEnabled default:NO forKey:@"kEnabled"];
+[preferences registerBool:&kEnabled default:NO forKey:@"enabled"];
 
 [preferences registerBool:&kWantsBackgroundColor default:NO forKey:@"wantsBackgroundColor"];
 
@@ -154,7 +159,8 @@ I forget the author's name, but will try to find the post to give appropriate cr
 
             %init(tweak);
         }
-}
+
+} //end of %ctor
 
     
             
