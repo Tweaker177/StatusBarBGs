@@ -134,7 +134,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>A respring is necessary anytime the settings are changed so that they are applied efficiently all at once.</string>
+			<string>A respring is needed anytime the background color is changed, but the foreground items update immediately.</string>
 		</dict>
 		<dict>
 			<key>action</key>
